@@ -1,43 +1,41 @@
+// src/app/dashboard/page.tsx
 "use client";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { api, getToken, getUser, clearAuth } from "../lib/api";
+import { api } from "@/lib/api";
+import { getToken } from "@/lib/auth";
+import type { Me } from "@/lib/types";
 
-export default function Dashboard() {
+export default function DashboardPage() {
   const router = useRouter();
-  const [me, setMe] = useState<{id:number;name:string;email:string}|null>(null);
+  const [me, setMe] = useState<Me | null>(null);
 
   useEffect(() => {
-    if (!getToken()) { router.replace("/"); return; }
-    api("/auth/me").then(setMe).catch(()=>router.replace("/"));
+    const uid = getToken();
+    if (!uid) {
+      router.replace("/");
+      return;
+    }
+
+    (async () => {
+      try {
+        // NOTE: backend route is /me (not /auth/me)
+        const data = await api<Me>("/me");
+        setMe(data);
+      } catch {
+        router.replace("/");
+      }
+    })();
   }, [router]);
 
   if (!me) return null;
 
   return (
-    <div className="grid" style={{gap:16}}>
-      <div className="card">
-        <div className="row" style={{alignItems:"center"}}>
-          <div className="badge">Signed in</div>
-          <div style={{fontWeight:700}}>{me.name}</div>
-          <div style={{color:"#64748b"}}>{me.email}</div>
-          <div style={{marginLeft:"auto"}} />
-          <button className="btn secondary" onClick={() => { clearAuth(); router.replace("/"); }}>Logout</button>
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="card" style={{flex:1}}>
-          <h3>Create a league</h3>
-          <p>Make your league and your first team.</p>
-          <a className="btn" href="/leagues/new">Create league</a>
-        </div>
-        <div className="card" style={{flex:1}}>
-          <h3>Join a league</h3>
-          <p>Enter a League ID and your team name.</p>
-          <a className="btn" href="/leagues/join">Join league</a>
-        </div>
-      </div>
-    </div>
+    <main className="p-6">
+      <h1 className="text-2xl font-semibold">Welcome, {me.name}</h1>
+      <p className="text-sm text-gray-500">{me.email}</p>
+      {/* ...your dashboard UI... */}
+    </main>
   );
 }
