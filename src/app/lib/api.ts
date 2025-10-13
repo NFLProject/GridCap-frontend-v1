@@ -1,14 +1,10 @@
-// src/lib/api.ts
-import { getToken } from "./auth";
+import { getToken } from "../lib/auth";
 
 const BASE =
   process.env.NEXT_PUBLIC_API_BASE ??
-  "https://nfl-fpl-backend.onrender.com"; // <- your backend URL
+  "https://nfl-fpl-backend.onrender.com";
 
-export async function api<T = unknown>(
-  path: string,
-  init?: RequestInit
-): Promise<T> {
+export async function api<T = unknown>(path: string, init?: RequestInit): Promise<T> {
   const uid = getToken();
   const res = await fetch(`${BASE}${path}`, {
     ...init,
@@ -19,7 +15,6 @@ export async function api<T = unknown>(
     },
     cache: "no-store",
   });
-
   if (!res.ok) {
     const text = await res.text();
     throw new Error(text || `HTTP ${res.status}`);
