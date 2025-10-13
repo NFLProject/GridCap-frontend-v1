@@ -1,11 +1,10 @@
 // src/app/dashboard/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { api } from "@/lib/api";
-import { getToken } from "@/lib/auth";
-import type { Me } from "@/lib/types";
+import { api } from "../../lib/api";
+import { getToken } from "../../lib/auth";
+import type { Me } from "../../lib/types";
+
 
 export default function DashboardPage() {
   const router = useRouter();
