@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { api, getToken } from "../../lib/api";
+import { api } from "../../lib/api";
+import { getToken } from "../../lib/auth";
+import type { Me } from "../../lib/types";
 
 type Row = { entry_id:number; team_name:string; points:number };
 
