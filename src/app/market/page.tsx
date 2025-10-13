@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import { api, getToken } from "../lib/api";
+import { api } from "../../lib/api";
+import { getToken } from "../../lib/auth";
+import type { Me } from "../../lib/types";
+
 
 type Player = { id:number; name:string; pos:string; team:string; price_m:number };
 
